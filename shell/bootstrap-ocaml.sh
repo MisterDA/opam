@@ -124,7 +124,7 @@ if [ -n "$1" ] && [ -n "${COMSPEC}" ] && [ -x "${COMSPEC}" ] ; then
     tar -xzf "../${FLEXDLL}"
     rm -rf flexdll
     mv flexdll-* flexdll
-    PATH="${PATH_PREPEND}${PREFIX}/bin:${PATH}" Lib="${LIB_PREPEND}${Lib}" Include="${INC_PREPEND}${Include}" make flexdll world.opt install
+    PATH="${PATH_PREPEND}${PREFIX}/bin:${PATH}" Lib="${LIB_PREPEND}${Lib:=}" Include="${INC_PREPEND}${Include:=}" make flexdll world.opt install
   fi
   OCAMLLIB=${WINPREFIX}/lib/ocaml
 else
