@@ -49,7 +49,7 @@ init-bootstrap () {
   if [[ $CURRENT_SWITCH != "default" ]] ; then
     opam switch default
     eval $(opam env)
-    opam switch remove $CURRENT_SWITCH --yes
+    opam switch remove "$CURRENT_SWITCH" --yes
   fi
 
   if [ "$OPAM_TEST" = "1" ]; then
@@ -140,7 +140,7 @@ EOF
           echo "Cached compiler is $LOCAL_OCAML_VERSION; requested $OCAML_VERSION"
           echo "Resetting local cache"
           rm -rf ~/local
-        elif [[ ${LOCAL_OPAMBSVERSION:-$OPAMBSVERSION} != $OPAMBSVERSION ]] ; then
+        elif [[ ${LOCAL_OPAMBSVERSION:-$OPAMBSVERSION} != "$OPAMBSVERSION" ]] ; then
           echo "Cached opam is $LOCAL_OPAMBSVERSION; requested $OPAMBSVERSION"
           echo "Replacement opam will be downloaded"
           rm -f ~/local/bin/opam-bootstrap
@@ -173,19 +173,19 @@ EOF
         cd "ocaml-$OCAML_VERSION"
         if [[ $OPAM_TEST -ne 1 ]] ; then
           if [[ -e configure.ac ]]; then
-            CONFIGURE_SWITCHES="--disable-debugger --disable-debug-runtime --disable-ocamldoc"
+            CONFIGURE_SWITCHES=(--disable-debugger --disable-debug-runtime --disable-ocamldoc)
             if [[ ${OCAML_VERSION%.*} = '4.08' ]]; then
-              CONFIGURE_SWITCHES="$CONFIGURE_SWITCHES --disable-graph-lib"
+              CONFIGURE_SWITCHES+=(--disable-graph-lib)
             fi
           else
-            CONFIGURE_SWITCHES="-no-graph -no-debugger -no-ocamldoc"
+            CONFIGURE_SWITCHES=(-no-graph -no-debugger -no-ocamldoc)
             if [[ "$OCAML_VERSION" != "4.02.3" ]] ; then
-              CONFIGURE_SWITCHES="$CONFIGURE_SWITCHES -no-ocamlbuild"
+              CONFIGURE_SWITCHES+=(-no-ocamlbuild)
             fi
 
           fi
         fi
-        ./configure --prefix ~/local ${CONFIGURE_SWITCHES:-}
+        ./configure --prefix ~/local "${CONFIGURE_SWITCHES[@]}"
         if [[ $OPAM_TEST -eq 1 ]] ; then
           make -j 4 world.opt
         else
@@ -211,7 +211,7 @@ EOF
         chmod a+x ~/local/bin/opam
 
         if [[ -d $OPAMBSROOT ]] ; then
-          init-bootstrap || { rm -rf $OPAMBSROOT; init-bootstrap; }
+          init-bootstrap || { rm -rf "$OPAMBSROOT"; init-bootstrap; }
         else
           init-bootstrap
         fi
@@ -331,7 +331,7 @@ export OCAMLRUNPARAM=b
     done
     # Compile and run opam-rt
     cd ~/build
-    wget https://github.com/ocaml/opam-rt/archive/$TRAVIS_PULL_REQUEST_BRANCH.tar.gz -O opam-rt.tar.gz || \
+    wget "https://github.com/ocaml/opam-rt/archive/$TRAVIS_PULL_REQUEST_BRANCH.tar.gz" -O opam-rt.tar.gz || \
     wget https://github.com/ocaml/opam-rt/archive/master.tar.gz -O opam-rt.tar.gz
     tar -xzf opam-rt.tar.gz
     cd opam-rt-*
