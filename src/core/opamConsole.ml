@@ -812,8 +812,10 @@ let confirm ?(require_unsafe_yes=false) ?(default=true) fmt =
       if OpamCoreConfig.(!r.safe_mode) then false else
       let prompt =
         Printf.ksprintf OpamStd.Format.reformat "%s [%s/%s] " s
-          (colorise' (`blue :: if default then [`underline] else []) "y")
-          (colorise' (`blue :: if default then [] else [`underline]) "n")
+          (colorise' (`blue :: if default then [`underline] else [])
+             (if default then "Y" else "y"))
+          (colorise' (`blue :: if default then [] else [`underline])
+             (if default then "n" else "N"))
       in
       if OpamCoreConfig.answer_is `unsafe_yes ||
          not require_unsafe_yes && OpamCoreConfig.answer_is_yes ()
@@ -824,10 +826,10 @@ let confirm ?(require_unsafe_yes=false) ?(default=true) fmt =
       then
         (formatted_msg "%sn\n" prompt; false)
       else
-        short_user_input ~prompt ~default:(if default then "y" else "n")
+        short_user_input ~prompt ~default:(if default then "Y" else "N")
         (function
-        | "y" | "yes" -> Some true
-        | "n" | "no" -> Some false
+        | "y" | "Y" | "yes" -> Some true
+        | "n" | "N" | "no" -> Some false
         | "\027" -> Some false (* echap *)
         | _  -> None))
     fmt
