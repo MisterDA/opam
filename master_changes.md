@@ -190,6 +190,7 @@ users)
   * Remove patch dependency in depext actions [#6676 @rjbou]
   * Bump opam binary used in depexts actions to 2.4.1 [#6676 @rjbou]
   * Check `src_ext/update-sources.sh` using shellcheck [#6701 @kit-ty-kate]
+  * Update the version of mingw-w64 used on Windows to 13.0.0 [#6592 @MisterDA]
 
 ## Doc
   * Update the installation documentation with the release of opam 2.4.1 [#6620 @kit-ty-kate]
